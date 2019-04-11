@@ -12,7 +12,7 @@ local pending = {}
 awesome.register_xproperty("WM_LAUNCH_ID", "string")
 
 awful.rules.add_rule_source("launch",
-    function (c, props)
+    function (c, props, callbacks)
         local id = c:get_xproperty("WM_LAUNCH_ID")
         if not id or id == "" then return end
 

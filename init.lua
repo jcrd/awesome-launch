@@ -46,7 +46,9 @@ end
 --- Get a launched client by its ID.
 --
 -- @param id The ID.
+-- @param filter Function to filter clients that are considered.
 -- @return The client.
+-- @function client.by_id
 function launch.client.by_id(id, filter)
     for _, c in ipairs(client.get()) do
         if (not filter or filter(c)) and c.single_instance_id == id then
@@ -57,8 +59,10 @@ end
 
 --- Get a launched client by its command line.
 --
--- @param id The command line.
+-- @param cmd The command line.
+-- @param filter Function to filter clients that are considered.
 -- @return The client.
+-- @function client.by_cmdline
 function launch.client.by_cmdline(cmd, filter)
     for _, c in ipairs(client.get()) do
         if (not filter or filter(c)) and c.cmdline == cmd then

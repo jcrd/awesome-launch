@@ -19,7 +19,8 @@ The new client will have these properties set:
 * `single_instance_id` = `"xterm1"`
 * `cmdline` = `"xterm"`
 
-See code for additional functions and documentation.
+See the [API documentation](https://jcrd.github.io/awesome-launch/) for
+descriptions of all functions.
 
 ## License
 

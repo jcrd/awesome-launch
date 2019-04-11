@@ -33,6 +33,7 @@ awful.rules.add_rule_source("launch",
 awful.client.property.persist("cmdline", "string")
 
 local launch = {}
+launch.client = {}
 
 local function get_ids()
     local ids = {}
@@ -42,12 +43,28 @@ local function get_ids()
     return ids
 end
 
---- Get a client by its ID.
+--- Get a launched client by its ID.
 --
 -- @param id The ID.
 -- @return The client.
-function launch.get_client_by_id(id)
-    return get_ids()[id]
+function launch.client.by_id(id, filter)
+    for _, c in ipairs(client.get()) do
+        if (not filter or filter(c)) and c.single_instance_id == id then
+            return c
+        end
+    end
+end
+
+--- Get a launched client by its command line.
+--
+-- @param id The command line.
+-- @return The client.
+function launch.client.by_cmdline(cmd, filter)
+    for _, c in ipairs(client.get()) do
+        if (not filter or filter(c)) and c.cmdline == cmd then
+            return c
+        end
+    end
 end
 
 local function gen_id()
@@ -120,11 +137,16 @@ setmetatable(launch.spawn, {__call = function (_, ...) spawn(...) end})
 -- @param args.pwd Pathname to the working directory for new clients.
 -- @param args.timeout Seconds after which to stop waiting for a client to spawn.
 -- @param args.callback Function to call with client when it spawns.
+-- @param args.filter Function to filter clients that are considered.
 -- @return The client's ID.
 -- @function spawn.single_instance
 function launch.spawn.single_instance(cmd, args)
-    if not args.id then return end
-    local c = get_ids()[args.id]
+    local c
+    if args.id then
+        c = launch.client.by_id(args.id, args.filter)
+    else
+        c = launch.client.by_cmdline(cmd, args.filter)
+    end
     if not c then return spawn(cmd, args) end
     return args.id
 end
@@ -138,11 +160,16 @@ end
 -- @param args.pwd Pathname to the working directory for new clients.
 -- @param args.timeout Seconds after which to stop waiting for a client to spawn.
 -- @param args.callback Function to call with client when it spawns.
+-- @param args.filter Function to filter clients that are considered.
 -- @return The client's ID.
 -- @function spawn.raise_or_spawn
 function launch.spawn.raise_or_spawn(cmd, args)
-    if not args.id then return end
-    local c = get_ids()[args.id]
+    local c
+    if args.id then
+        c = launch.client.by_id(args.id, args.filter)
+    else
+        c = launch.client.by_cmdline(cmd, args.filter)
+    end
     if c then
         c:emit_signal("request::activate", "launch.spawn.raise_or_spawn",
             {raise=true})

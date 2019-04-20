@@ -6,6 +6,9 @@
 
 local awful = require("awful")
 local gears = require("gears")
+local uuid = require("uuid")
+
+uuid.seed()
 
 local pending = {}
 
@@ -71,17 +74,6 @@ function launch.client.by_cmdline(cmd, filter)
     end
 end
 
-local function gen_id()
-    local i = 1
-    local id = "1"
-    local ids = get_ids()
-    while ids[id] do
-        i = i + 1
-        id = string.format("%d", i)
-    end
-    return id
-end
-
 --- Spawn a client with wm-launch.
 --
 -- @param cmd The command.
@@ -95,7 +87,7 @@ end
 -- @function launch.spawn
 local function spawn(cmd, args)
     args = args or {}
-    local id = args.id or gen_id()
+    local id = args.id or uuid()
     local data = {
         props = args.props or {},
         tags = args.tags,

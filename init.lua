@@ -95,7 +95,7 @@ end
 -- @function launch.spawn
 local function spawn(cmd, args)
     args = args or {}
-    id = args.id or gen_id()
+    local id = args.id or gen_id()
     local data = {
         props = args.props or {},
         tags = args.tags,

@@ -83,6 +83,7 @@ end
 -- @param args.pwd Pathname to the working directory for new clients.
 -- @param args.timeout Seconds after which to stop waiting for a client to spawn.
 -- @param args.callback Function to call with client when it spawns.
+-- @param args.factory The factory to use (see wm-launch's -f flag).
 -- @return The client's ID.
 -- @function launch.spawn
 local function spawn(cmd, args)
@@ -106,7 +107,13 @@ local function spawn(cmd, args)
         callback = function () pending[id] = nil end,
     }
 
-    local launch = string.format("wm-launch %s %s", id, cmd)
+    local launch = "wm-launch"
+
+    if args.factory then
+        launch = launch .. " -f " .. args.factory
+    end
+
+    launch = string.format("%s %s %s", launch, id, cmd)
 
     if data.pwd then
         awful.spawn.with_shell(string.format("cd %s; %s", data.pwd, launch))

@@ -140,6 +140,7 @@ setmetatable(launch.spawn, {__call = function (_, ...) spawn(...) end})
 -- @param args.pwd Pathname to the working directory for new clients.
 -- @param args.timeout Seconds after which to stop waiting for a client to spawn.
 -- @param args.callback Function to call with client when it spawns.
+-- @param args.factory The factory to use (see wm-launch's -f flag).
 -- @param args.filter Function to filter clients that are considered.
 -- @return The client's ID.
 -- @function spawn.single_instance
@@ -163,6 +164,7 @@ end
 -- @param args.pwd Pathname to the working directory for new clients.
 -- @param args.timeout Seconds after which to stop waiting for a client to spawn.
 -- @param args.callback Function to call with client when it spawns.
+-- @param args.factory The factory to use (see wm-launch's -f flag).
 -- @param args.filter Function to filter clients that are considered.
 -- @return The client's ID.
 -- @function spawn.raise_or_spawn

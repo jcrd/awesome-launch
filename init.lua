@@ -84,6 +84,7 @@ end
 -- @param args.timeout Seconds after which to stop waiting for a client to spawn.
 -- @param args.callback Function to call with client when it spawns.
 -- @param args.factory The factory to use (see wm-launch's -f flag).
+-- @param args.firejail If true, run cmd with firejail.
 -- @return The client's ID.
 -- @function launch.spawn
 local function spawn(cmd, args)
@@ -111,6 +112,10 @@ local function spawn(cmd, args)
 
     if args.factory then
         launch = launch .. " -f " .. args.factory
+    end
+
+    if args.firejail then
+        launch = launch .. " -j"
     end
 
     launch = string.format("%s %s %s", launch, id, cmd)
@@ -141,6 +146,7 @@ setmetatable(launch.spawn, {__call = function (_, ...) spawn(...) end})
 -- @param args.timeout Seconds after which to stop waiting for a client to spawn.
 -- @param args.callback Function to call with client when it spawns.
 -- @param args.factory The factory to use (see wm-launch's -f flag).
+-- @param args.firejail If true, run cmd with firejail.
 -- @param args.filter Function to filter clients that are considered.
 -- @return The client's ID.
 -- @function spawn.single_instance
@@ -165,6 +171,7 @@ end
 -- @param args.timeout Seconds after which to stop waiting for a client to spawn.
 -- @param args.callback Function to call with client when it spawns.
 -- @param args.factory The factory to use (see wm-launch's -f flag).
+-- @param args.firejail If true, run cmd with firejail.
 -- @param args.filter Function to filter clients that are considered.
 -- @return The client's ID.
 -- @function spawn.raise_or_spawn

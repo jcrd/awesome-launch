@@ -14,5 +14,6 @@ build = {
     modules = {
         ["awesome-launch"] = "init.lua",
         ["awesome-launch.uuid"] = "uuid.lua",
+        ["awesome-launch.panel"] = "panel.lua",
     },
 }

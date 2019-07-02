@@ -2,11 +2,11 @@
 --
 -- @author James Reed &lt;jcrd@tuta.io&gt;
 -- @copyright 2019 James Reed
--- @module launch
+-- @module awesome-launch
 
 local awful = require("awful")
 local gears = require("gears")
-local uuid = require("uuid")
+local uuid = require("awesome-launch.uuid")
 
 uuid.seed()
 

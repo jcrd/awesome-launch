@@ -1,0 +1,310 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>awesome-launch API documentation</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>awesome-launch</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><strong>awesome-launch</strong></li>
+  <li><a href="../modules/awesome-launch.panel.html">awesome-launch.panel</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>awesome-launch</code></h1>
+<p>Launch clients with single instance IDs using wm-launch.</p>
+<p></p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Copyright</strong>: 2019 James Reed</li>
+        <li><strong>Author</strong>: James Reed &lt;jcrd@tuta.io&gt;</li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#client.by_id">client.by_id (id, filter)</a></td>
+	<td class="summary">Get a launched client by its ID.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#client.by_cmdline">client.by_cmdline (cmd, filter)</a></td>
+	<td class="summary">Get a launched client by its command line.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#launch.spawn">launch.spawn (cmd, args)</a></td>
+	<td class="summary">Spawn a client with wm-launch.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#spawn.single_instance">spawn.single_instance (cmd, args)</a></td>
+	<td class="summary">Spawn a command if an instance is not already running.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#spawn.raise_or_spawn">spawn.raise_or_spawn (cmd, args)</a></td>
+	<td class="summary">Raise a client if it exists or spawn a new one then raise it.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "client.by_id"></a>
+    <strong>client.by_id (id, filter)</strong>
+    </dt>
+    <dd>
+    Get a launched client by its ID.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+         The ID.
+        </li>
+        <li><span class="parameter">filter</span>
+         Function to filter clients that are considered.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        The client.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "client.by_cmdline"></a>
+    <strong>client.by_cmdline (cmd, filter)</strong>
+    </dt>
+    <dd>
+    Get a launched client by its command line.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">cmd</span>
+         The command line.
+        </li>
+        <li><span class="parameter">filter</span>
+         Function to filter clients that are considered.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        The client.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "launch.spawn"></a>
+    <strong>launch.spawn (cmd, args)</strong>
+    </dt>
+    <dd>
+    Spawn a client with wm-launch.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">cmd</span>
+         The command.
+        </li>
+        <li><span class="parameter">args</span> Table containing the single instance ID and additional arguments
+        <ul>
+        <li><span class="parameter">id</span>
+         Single instance ID.
+        </li>
+        <li><span class="parameter">props</span>
+         Properties to apply to the client.
+        </li>
+        <li><span class="parameter">pwd</span>
+         Pathname to the working directory for new clients.
+        </li>
+        <li><span class="parameter">timeout</span>
+         Seconds after which to stop waiting for a client to spawn.
+        </li>
+        <li><span class="parameter">callback</span>
+         Function to call with client when it spawns.
+        </li>
+        <li><span class="parameter">factory</span>
+         The factory to use (see wm-launch's -f flag).
+        </li>
+        <li><span class="parameter">firejail</span>
+         If true, run cmd with firejail.
+        </li>
+        </li></ul>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        The client's ID.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "spawn.single_instance"></a>
+    <strong>spawn.single_instance (cmd, args)</strong>
+    </dt>
+    <dd>
+    Spawn a command if an instance is not already running.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">cmd</span>
+         The command.
+        </li>
+        <li><span class="parameter">args</span> Table containing the single instance ID and additional arguments for spawn
+        <ul>
+        <li><span class="parameter">id</span>
+         Single instance ID.
+        </li>
+        <li><span class="parameter">props</span>
+         Properties to apply to the client.
+        </li>
+        <li><span class="parameter">pwd</span>
+         Pathname to the working directory for new clients.
+        </li>
+        <li><span class="parameter">timeout</span>
+         Seconds after which to stop waiting for a client to spawn.
+        </li>
+        <li><span class="parameter">callback</span>
+         Function to call with client when it spawns.
+        </li>
+        <li><span class="parameter">factory</span>
+         The factory to use (see wm-launch's -f flag).
+        </li>
+        <li><span class="parameter">firejail</span>
+         If true, run cmd with firejail.
+        </li>
+        <li><span class="parameter">filter</span>
+         Function to filter clients that are considered.
+        </li>
+        </li></ul>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        The client's ID.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "spawn.raise_or_spawn"></a>
+    <strong>spawn.raise_or_spawn (cmd, args)</strong>
+    </dt>
+    <dd>
+    Raise a client if it exists or spawn a new one then raise it.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">cmd</span>
+         The command.
+        </li>
+        <li><span class="parameter">args</span> Table containing the single instance ID and additional arguments for spawn
+        <ul>
+        <li><span class="parameter">id</span>
+         Single instance ID.
+        </li>
+        <li><span class="parameter">props</span>
+         Properties to apply to the client.
+        </li>
+        <li><span class="parameter">pwd</span>
+         Pathname to the working directory for new clients.
+        </li>
+        <li><span class="parameter">timeout</span>
+         Seconds after which to stop waiting for a client to spawn.
+        </li>
+        <li><span class="parameter">callback</span>
+         Function to call with client when it spawns.
+        </li>
+        <li><span class="parameter">factory</span>
+         The factory to use (see wm-launch's -f flag).
+        </li>
+        <li><span class="parameter">firejail</span>
+         If true, run cmd with firejail.
+        </li>
+        <li><span class="parameter">filter</span>
+         Function to filter clients that are considered.
+        </li>
+        </li></ul>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        The client's ID.
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2019-07-02 17:25:40 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

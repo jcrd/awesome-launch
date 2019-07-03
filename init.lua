@@ -6,7 +6,7 @@
 
 local awful = require("awful")
 local gears = require("gears")
-local uuid = require("awesome-launch.uuid")
+local uuid = require("uuid")
 
 uuid.seed()
 

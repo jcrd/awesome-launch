@@ -26,5 +26,3 @@ descriptions of all functions.
 
 awesome-launch is licensed under the GNU General Public License v3.0 or later
 (see [LICENSE](LICENSE)).
-
-`uuid.lua` is licensed under the Apache License v2.0.

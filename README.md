@@ -4,6 +4,11 @@ awesome-launch is a library for [Awesome](https://github.com/awesomeWM/awesome)
 window manager that provides functions to spawn clients with single instance
 IDs using [wm-launch](https://github.com/jcrd/wm-launch).
 
+## Dependencies
+
+* [uuid](https://luarocks.org/modules/tieske/uuid) rock
+* [wm-launch](https://github.com/jcrd/wm-launch)
+
 ## Usage
 
 Require the library:

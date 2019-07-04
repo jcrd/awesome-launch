@@ -9,6 +9,14 @@ IDs using [wm-launch](https://github.com/jcrd/wm-launch).
 * [uuid](https://luarocks.org/modules/tieske/uuid) rock
 * [wm-launch](https://github.com/jcrd/wm-launch)
 
+## Installation
+
+```
+$ git clone https://github.com/jcrd/awesome-launch.git
+$ cd awesome-launch
+$ luarocks make --local
+```
+
 ## Usage
 
 Require the library:

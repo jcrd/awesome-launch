@@ -18,6 +18,7 @@ local function spawn(cmd, args)
         c.hidden = true
         c.sticky = true
         c.floating = true
+        c.skip_taskbar = true
         awful.placement.scale(c, {to_percent=args.scale or 0.5})
         awful.placement.centered(c)
         c:connect_signal("unfocus", function () c.hidden = true end)

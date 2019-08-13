@@ -92,7 +92,6 @@ local function spawn(cmd, args)
     local id = args.id or uuid()
     local data = {
         props = args.props or {},
-        tags = args.tags,
         pwd = args.pwd,
         callback = args.callback,
     }

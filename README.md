@@ -35,6 +35,30 @@ The new client will have these properties set:
 See the [API documentation](https://jcrd.github.io/awesome-launch/) for
 descriptions of all functions.
 
+## Widget
+
+A `launchbar` widget is provided to visualize pending clients.
+
+Customize the launchbar:
+```lua
+launch.widget.color = beautiful.fg_focus
+```
+
+Create a new launchbar for the given screen:
+```lua
+screen.connect_signal("request::desktop_decoration", function (s)
+  ...
+  s.launchbar = launch.widget.launchbar {
+    screen = s,
+  }
+  s.mywibox:setup {
+    ...
+    s.launchbar,
+    ...
+  }
+end)
+```
+
 ## License
 
 awesome-launch is licensed under the GNU General Public License v3.0 or later

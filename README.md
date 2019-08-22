@@ -14,7 +14,7 @@ IDs using [wm-launch](https://github.com/jcrd/wm-launch).
 ```
 $ git clone https://github.com/jcrd/awesome-launch.git
 $ cd awesome-launch
-$ luarocks make --local
+$ luarocks make --local rockspec/awesome-launch-devel-1.rockspec
 ```
 
 ## Usage

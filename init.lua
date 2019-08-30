@@ -45,6 +45,44 @@ local function props_visible(s, p)
     end
 end
 
+local function new_widget(cmd, data, theme)
+    local defaults = {
+        color = beautiful.bg_focus,
+        border_color = beautiful.fg_normal,
+        width = 20,
+        margins = 2,
+    }
+
+    gears.table.crush(defaults, theme)
+
+    return wibox.widget {
+        {
+            {
+                {
+                    id = "id_progress",
+                    min_value = 0,
+                    max_value = data.timeout,
+                    value = data.timeout,
+                    color = defaults.color,
+                    border_color = defaults.border_color,
+                    widget = wibox.container.radialprogressbar,
+                },
+                id = "id_margin",
+                margins = defaults.margins,
+                layout = wibox.container.margin,
+            },
+            id = "id_const",
+            width = defaults.width,
+            layout = wibox.container.constraint,
+        },
+        {
+            text = cmd,
+            widget = wibox.widget.textbox,
+        },
+        layout = wibox.layout.fixed.horizontal,
+    }
+end
+
 local function update_widget(w)
     w.widget:reset()
     for _, data in pairs(pending) do
@@ -220,32 +258,7 @@ local function spawn(cmd, args)
     }
 
     if #widgets > 0 then
-        data.widget = wibox.widget {
-            {
-                {
-                    {
-                        id = "id_progress",
-                        min_value = 0,
-                        max_value = data.timeout,
-                        value = data.timeout,
-                        color = launch.widget.color,
-                        border_color = launch.widget.border_color,
-                        widget = wibox.container.radialprogressbar,
-                    },
-                    id = "id_margin",
-                    margins = launch.widget.margins,
-                    layout = wibox.container.margin,
-                },
-                id = "id_const",
-                width = launch.widget.width,
-                layout = wibox.container.constraint,
-            },
-            {
-                text = cmd,
-                widget = wibox.widget.textbox,
-            },
-            layout = wibox.layout.fixed.horizontal,
-        }
+        data.widget = new_widget(cmd, data, launch.widget)
     end
 
     local launch = "wm-launch"

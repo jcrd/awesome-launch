@@ -59,6 +59,36 @@ screen.connect_signal("request::desktop_decoration", function (s)
 end)
 ```
 
+## Command-line client
+
+`awesome-launch` is a wrapper around `awesome-client` that can be used to
+launch clients from the command line with single instance IDs tracked by
+Awesome.
+
+### Usage
+
+```
+usage: awesome-launch [options] COMMAND...
+
+options:
+  -h          Show help message
+  -j          Launch with firejail
+  -f FACTORY  Launch via a window factory
+  -i ID       The single instance ID to use
+  -s          Spawn if not already running
+  -r          Raise or spawn
+```
+
+Enable use of `awesome-client` by including the following in `rc.lua`:
+```lua
+require("awful.remote")
+```
+
+If installed via `luarocks`, ensure `awesome-launch`'s [location][1] is in your
+`PATH`.
+
+[1]: https://github.com/luarocks/luarocks/wiki/File-locations#Path_where_commandline_scripts_are_installed
+
 ## License
 
 awesome-launch is licensed under the GNU General Public License v3.0 or later

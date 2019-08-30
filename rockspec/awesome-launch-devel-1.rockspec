@@ -19,4 +19,9 @@ build = {
         ["awesome-launch"] = "init.lua",
         ["awesome-launch.panel"] = "panel.lua",
     },
+    install = {
+        bin = {
+            "awesome-launch",
+        },
+    },
 }

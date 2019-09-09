@@ -18,6 +18,8 @@ build = {
     modules = {
         ["awesome-launch"] = "init.lua",
         ["awesome-launch.panel"] = "panel.lua",
+        ["awesome-launch.shared"] = "shared.lua",
+        ["awesome-launch.widget"] = "widget.lua",
     },
     install = {
         bin = {

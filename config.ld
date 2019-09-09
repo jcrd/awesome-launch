@@ -6,6 +6,7 @@ description='API documentation for awesome-launch, a library for Awesome WM'
 file={
     'init.lua',
     'panel.lua',
+    'widget.lua',
 }
 
 -- vim: ft=lua

@@ -10,146 +10,12 @@ local wibox = require("wibox")
 local beautiful = require("beautiful")
 local uuid = require("uuid")
 
+local shared = require("awesome-launch.shared")
+
 uuid.seed()
 
-local pending = {}
-local widgets = {}
-
 local launch = {}
-launch.widget = {}
-
-launch.widget.color = beautiful.bg_focus
-launch.widget.border_color = beautiful.fg_normal
-launch.widget.width = beautiful.wibar_height or 20
-launch.widget.margins = 2
-
-local function props_visible(s, p)
-    if p.screen and p.screen ~= s then
-        return false
-    end
-    local function selected(t)
-        if gears.table.hasitem(s.selected_tags, t) then
-            return true
-        end
-    end
-    if p.first_tag then
-        return selected(p.first_tag)
-    end
-    if p.tag then
-        return selected(p.tag)
-    end
-    if p.tags then
-        for _, t in ipairs(p.tags) do
-            if selected(t) then return true end
-        end
-    end
-end
-
-local function new_widget(cmd, data, theme)
-    local defaults = {
-        color = beautiful.bg_focus,
-        border_color = beautiful.fg_normal,
-        width = 20,
-        margins = 2,
-    }
-
-    gears.table.crush(defaults, theme)
-
-    return wibox.widget {
-        {
-            {
-                {
-                    id = "id_progress",
-                    min_value = 0,
-                    max_value = data.timeout,
-                    value = data.timeout,
-                    color = defaults.color,
-                    border_color = defaults.border_color,
-                    widget = wibox.container.radialprogressbar,
-                },
-                id = "id_margin",
-                margins = defaults.margins,
-                layout = wibox.container.margin,
-            },
-            id = "id_const",
-            width = defaults.width,
-            layout = wibox.container.constraint,
-        },
-        {
-            text = cmd,
-            widget = wibox.widget.textbox,
-        },
-        layout = wibox.layout.fixed.horizontal,
-    }
-end
-
-local function update_widget(w)
-    w.widget:reset()
-    for _, data in pairs(pending) do
-        local visible = true
-        if w.only_tagged then
-            visible = props_visible(w.screen or awful.screen.focused(),
-                data.props)
-        end
-        if visible and (not w.filter or w.filter(data)) then
-            w.widget:add(data.widget)
-        end
-    end
-end
-
-local function update_widgets()
-    for _, w in ipairs(widgets) do
-        update_widget(w)
-    end
-end
-
---- Create a new launchbar widget.
---
--- The following options are available to customize the widget's
--- radialprogressbar:
---
---   launch.widget.color
---
---   launch.widget.border_color
---
---   launch.widget.width
---
---   launch.widget.margins
---
--- @param args Table containing widget options
--- @param args.screen The screen pending clients must belong to.
--- @param args.filter Function to filter clients that are considered.
--- @param args.only_tagged Show only pending clients with selected tags.
--- @return The widget.
--- @function widget.launchbar
-function launch.widget.launchbar(args)
-    args = args or {}
-    local w = {
-        screen = args.screen,
-        filter = args.filter,
-        only_tagged = true,
-        widget = wibox.widget {
-            layout = wibox.layout.fixed.horizontal,
-        },
-    }
-
-    if args.only_tagged == false then
-        w.only_tagged = false
-    end
-
-    if w.only_tagged and w.screen then
-        screen.connect_signal("tag::history::update", function (s)
-            if s == w.screen then
-                update_widget(w)
-            end
-        end)
-    end
-
-    table.insert(widgets, w)
-
-    return w.widget
-end
-
+launch.widget = require("awesome-launch.widget")
 
 awesome.register_xproperty("WM_LAUNCH_ID", "string")
 
@@ -158,7 +24,7 @@ awful.rules.add_rule_source("launch",
         local id = c:get_xproperty("WM_LAUNCH_ID")
         if not id or id == "" then return end
 
-        local data = pending[id]
+        local data = shared.pending[id]
         if not data then return end
 
         data.timer:stop()
@@ -169,8 +35,8 @@ awful.rules.add_rule_source("launch",
             table.insert(callbacks, data.callback)
         end
 
-        pending[id] = nil
-        update_widgets()
+        shared.pending[id] = nil
+        launch.widget.update_widgets()
     end)
 
 awful.client.property.persist("cmdline", "string")
@@ -247,8 +113,8 @@ local function spawn(cmd, args)
         callback = function ()
             data.timeout = data.timeout - step
             if data.timeout == 0 then
-                pending[id] = nil
-                update_widgets()
+                shared.pending[id] = nil
+                launch.widget.update_widgets()
                 return false
             else
                 data.widget.id_const.id_margin.id_progress.value = data.timeout
@@ -257,8 +123,8 @@ local function spawn(cmd, args)
         end,
     }
 
-    if #widgets > 0 then
-        data.widget = new_widget(cmd, data, launch.widget)
+    if launch.widget.active() then
+        data.widget = launch.widget.new(cmd, data)
     end
 
     local launch = "wm-launch"
@@ -279,8 +145,8 @@ local function spawn(cmd, args)
         awful.spawn(launch)
     end
 
-    pending[id] = data
-    update_widgets()
+    shared.pending[id] = data
+    launch.widget.update_widgets()
     data.timer:start()
 
     return id

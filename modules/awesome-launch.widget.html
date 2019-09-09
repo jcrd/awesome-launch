@@ -39,16 +39,16 @@
 <h2>Modules</h2>
 <ul class="nowrap">
   <li><a href="../modules/awesome-launch.html">awesome-launch</a></li>
-  <li><strong>awesome-launch.panel</strong></li>
-  <li><a href="../modules/awesome-launch.widget.html">awesome-launch.widget</a></li>
+  <li><a href="../modules/awesome-launch.panel.html">awesome-launch.panel</a></li>
+  <li><strong>awesome-launch.widget</strong></li>
 </ul>
 
 </div>
 
 <div id="content">
 
-<h1>Module <code>awesome-launch.panel</code></h1>
-<p>Launch clients as panels.</p>
+<h1>Module <code>awesome-launch.widget</code></h1>
+<p>Widget to show pending clients.</p>
 <p></p>
     <h3>Info:</h3>
     <ul>
@@ -60,8 +60,8 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#toggle">toggle (cmd, args)</a></td>
-	<td class="summary">Toggle the visibility of a panel, spawning the command if necessary.</td>
+	<td class="name" nowrap><a href="#launch.widget.launchbar">launch.widget.launchbar (args)</a></td>
+	<td class="summary">Create a new launchbar widget.</td>
 	</tr>
 </table>
 
@@ -73,53 +73,41 @@
 
     <dl class="function">
     <dt>
-    <a name = "toggle"></a>
-    <strong>toggle (cmd, args)</strong>
+    <a name = "launch.widget.launchbar"></a>
+    <strong>launch.widget.launchbar (args)</strong>
     </dt>
     <dd>
-    Toggle the visibility of a panel, spawning the command if necessary.
-<p> A panel is a floating, centered client that can be scaled to a percentage of
- its size.
+    Create a new launchbar widget.
+<p> The following options are available to customize the widget's
+ radialprogressbar:
+<p>   launch.widget.color
+<p>   launch.widget.border_color
+<p>   launch.widget.width
+<p>   launch.widget.margins
 
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">cmd</span>
-         The command.
-        </li>
-        <li><span class="parameter">args</span> Table containing the single instance ID and additional arguments for spawn
+        <li><span class="parameter">args</span> Table containing widget options
         <ul>
-        <li><span class="parameter">id</span>
-         Single instance ID.
-        </li>
-        <li><span class="parameter">props</span>
-         Properties to apply to the client.
-        </li>
-        <li><span class="parameter">pwd</span>
-         Pathname to the working directory for new clients.
-        </li>
-        <li><span class="parameter">timeout</span>
-         Seconds after which to stop waiting for a client to spawn.
-        </li>
-        <li><span class="parameter">callback</span>
-         Function to call with client when it spawns.
-        </li>
-        <li><span class="parameter">factory</span>
-         The factory to use (see wm-launch's -f flag).
-        </li>
-        <li><span class="parameter">firejail</span>
-         If true, run cmd with firejail.
+        <li><span class="parameter">screen</span>
+         The screen pending clients must belong to.
         </li>
         <li><span class="parameter">filter</span>
          Function to filter clients that are considered.
         </li>
-        <li><span class="parameter">scale</span>
-         Percent to scale client (see awful.placement.scale).
+        <li><span class="parameter">only_tagged</span>
+         Show only pending clients with selected tags.
         </li>
         </li></ul>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+        The widget.
+    </ol>
 
 
 

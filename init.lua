@@ -127,22 +127,22 @@ local function spawn(cmd, args)
         data.widget = launch.widget.new(cmd, data)
     end
 
-    local launch = "wm-launch"
+    local launch_cmd = "wm-launch"
 
     if args.factory then
-        launch = launch .. " -f " .. args.factory
+        launch_cmd = launch_cmd .. " -f " .. args.factory
     end
 
     if args.firejail then
-        launch = launch .. " -j"
+        launch_cmd = launch_cmd .. " -j"
     end
 
-    launch = string.format("%s %s %s", launch, id, cmd)
+    launch_cmd = string.format("%s %s %s", launch_cmd, id, cmd)
 
     if data.pwd then
-        awful.spawn.with_shell(string.format("cd %s; %s", data.pwd, launch))
+        awful.spawn.with_shell(string.format("cd %s; %s", data.pwd, launch_cmd))
     else
-        awful.spawn(launch)
+        awful.spawn(launch_cmd)
     end
 
     shared.pending[id] = data

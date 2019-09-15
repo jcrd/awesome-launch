@@ -221,4 +221,46 @@ function launch.spawn.raise_or_spawn(cmd, args)
     return spawn(cmd, args)
 end
 
+--- Spawn clients on a tag.
+--
+-- Usage: `launch.spawn.here().spawn("xterm")`
+--
+-- @param tag_func Optional function that returns the tag, defaults to
+-- `awful.screen.focused().selected_tag`.
+-- @return A table with the functions: spawn, single_instance, raise_or_spawn.
+-- @function spawn.here
+function launch.spawn.here(tag_func)
+    local here = {}
+
+    local function with_tag(func, cmd, args)
+        local tag
+        if tag_func then
+            tag = tag_func()
+        else
+            tag = awful.screen.focused().selected_tag
+        end
+
+        local a = {
+            filter = function (c) return c:isvisible() end,
+            props = {tag = tag},
+        }
+        gears.table.crush(a, args or {})
+        func(cmd, a)
+    end
+
+    function here.spawn(...)
+        with_tag(launch.spawn, ...)
+    end
+
+    function here.single_instance(...)
+        with_tag(launch.spawn.single_instance, ...)
+    end
+
+    function here.raise_or_spawn(...)
+        with_tag(launch.spawn.raise_or_spawn, ...)
+    end
+
+    return here
+end
+
 return launch

@@ -39,17 +39,17 @@
 <h2>Modules</h2>
 <ul class="nowrap">
   <li><a href="../modules/awesome-launch.html">awesome-launch</a></li>
-  <li><strong>awesome-launch.panel</strong></li>
+  <li><a href="../modules/awesome-launch.panel.html">awesome-launch.panel</a></li>
   <li><a href="../modules/awesome-launch.widget.html">awesome-launch.widget</a></li>
-  <li><a href="../modules/awesome-launch.workspace.html">awesome-launch.workspace</a></li>
+  <li><strong>awesome-launch.workspace</strong></li>
 </ul>
 
 </div>
 
 <div id="content">
 
-<h1>Module <code>awesome-launch.panel</code></h1>
-<p>Launch clients as panels.</p>
+<h1>Module <code>awesome-launch.workspace</code></h1>
+<p>Create new tags and launch accompanying clients.</p>
 <p></p>
     <h3>Info:</h3>
     <ul>
@@ -61,8 +61,12 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#toggle">toggle (cmd, args)</a></td>
-	<td class="summary">Toggle the visibility of a panel, spawning the command if necessary.</td>
+	<td class="name" nowrap><a href="#client.add">client.add (cmd, args, tag)</a></td>
+	<td class="summary">Spawn a command and add the client to a tag.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#add">add (name, args)</a></td>
+	<td class="summary">Create a new workspace and underlying tag.</td>
 	</tr>
 </table>
 
@@ -74,14 +78,11 @@
 
     <dl class="function">
     <dt>
-    <a name = "toggle"></a>
-    <strong>toggle (cmd, args)</strong>
+    <a name = "client.add"></a>
+    <strong>client.add (cmd, args, tag)</strong>
     </dt>
     <dd>
-    Toggle the visibility of a panel, spawning the command if necessary.
-<p> A panel is a floating, centered client that can be scaled to a percentage of
- its size.
-
+    Spawn a command and add the client to a tag.
 
 
     <h3>Parameters:</h3>
@@ -112,15 +113,55 @@
         <li><span class="parameter">firejail</span>
          If true, run cmd with firejail.
         </li>
-        <li><span class="parameter">filter</span>
-         Function to filter clients that are considered.
+        </li></ul>
+        <li><span class="parameter">tag</span>
+         The tag.
         </li>
-        <li><span class="parameter">scale</span>
-         Percent to scale client (see awful.placement.scale).
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "add"></a>
+    <strong>add (name, args)</strong>
+    </dt>
+    <dd>
+    Create a new workspace and underlying tag.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+         The tag name.
+        </li>
+        <li><span class="parameter">args</span> Table containing tag properties and additional workspace options
+        <ul>
+        <li><span class="parameter">props</span>
+         Properties to apply to the tag.
+        </li>
+        <li><span class="parameter">pwd</span>
+         Pathname to the working directory for new clients.
+        </li>
+        <li><span class="parameter">clients</span>
+         Table containing client commands to spawn.
+<p> Example: <code>args.clients = { &quot;xterm&quot;,
+ {&quot;qutebrowser&quot;, {factory=&quot;qutebrowser&quot;}} }</code>
+
+        </li>
+        <li><span class="parameter">callback</span>
+         Function to call with newly created tag.
         </li>
         </li></ul>
     </ul>
 
+    <h3>Returns:</h3>
+    <ol>
+
+        The new tag.
+    </ol>
 
 
 

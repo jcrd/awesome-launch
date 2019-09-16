@@ -8,5 +8,6 @@ file={
     'panel.lua',
     'widget.lua',
 }
+backtick_references=true
 
 -- vim: ft=lua

@@ -35,6 +35,27 @@ The new client will have these properties set:
 See the [API documentation](https://jcrd.github.io/awesome-launch/) for
 descriptions of all functions.
 
+## Workspaces
+
+Require the library:
+```lua
+local ws = require("awesome-launch.workspace")
+```
+
+Add a new workspace:
+```lua
+ws.add("code", {
+  pwd = "/home/user/code",
+  clients = {
+    "xterm -e vim",
+    {"qutebrowser", {factory="qutebrowser"}},
+  }
+})
+```
+
+A new tag named `code` will be created with the working directory and clients
+listed above.
+
 ## Widget
 
 A `launchbar` widget is provided to visualize pending clients.

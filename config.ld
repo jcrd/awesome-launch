@@ -7,6 +7,7 @@ file={
     'init.lua',
     'panel.lua',
     'widget.lua',
+    'workspace.lua',
 }
 backtick_references=true
 

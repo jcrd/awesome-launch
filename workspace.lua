@@ -1,4 +1,4 @@
---- Create new tags and launch accompanying clients.
+--- Create new workspaces and launch accompanying clients.
 --
 -- @author James Reed &lt;jcrd@tuta.io&gt;
 -- @copyright 2019 James Reed
@@ -10,6 +10,36 @@ local launch = require("awesome-launch")
 
 local ws = {}
 ws.client = {}
+
+function handle_args(tag, args)
+    args = args or {}
+
+    if args.pwd then
+        tag.pwd = args.pwd
+    end
+
+    if args.replace and not tag.volatile then
+        for _, c in ipairs(tag:clients()) do c:kill() end
+    end
+
+    if args.clients then
+        for _, c in ipairs(args.clients) do
+            local cmd = c
+            local cmdargs
+            if type(c) == "table" then
+                cmd = c[1]
+                cmdargs = gtable.clone(c[2], false)
+            end
+            ws.client.add(cmd, cmdargs, tag)
+        end
+    end
+
+    if args.callback then
+        args.callback(tag)
+    end
+
+    return tag
+end
 
 --- Spawn a command and add the client to a tag.
 --
@@ -36,7 +66,7 @@ function ws.client.add(cmd, args, tag)
     launch.spawn(cmd, args)
 end
 
---- Create a new workspace and underlying tag.
+--- Create a new workspace and underlying (volatile) tag.
 --
 -- @param name The tag name.
 -- @param args Table containing tag properties and additional workspace options
@@ -49,37 +79,51 @@ end
 --
 -- @param args.callback Function to call with newly created tag.
 -- @return The new tag.
--- @function add
-function ws.add(name, args)
-    args = args or {}
+-- @function new
+function ws.new(name, args)
     local props = {
         screen = awful.screen.focused(),
         volatile = true,
     }
-    gtable.crush(props, args.props or {})
+    if args and args.props then
+        gtable.crush(props, args.props)
+    end
     local tag = awful.tag.add(name, props)
 
-    if args.pwd then
-        tag.pwd = args.pwd
-    end
+    return handle_args(tag, args)
+end
 
-    if args.clients then
-        for _, c in ipairs(args.clients) do
-            local cmd = c
-            local cmdargs
-            if type(c) == "table" then
-                cmd = c[1]
-                cmdargs = gtable.clone(c[2], false)
-            end
-            ws.client.add(cmd, cmdargs, tag)
-        end
-    end
+--- Add to or replace a given tag's clients.
+--
+-- @param tag The tag to affect.
+-- @param args Table containing tag properties and additional workspace options
+-- @param args.pwd Pathname to the working directory for new clients.
+-- @param args.replace Kill tag's existing clients if true.
+-- @param args.clients Table containing client commands to spawn.
+--
+-- Example: `args.clients = { "xterm",
+-- {"qutebrowser", {factory="qutebrowser"}} }`
+--
+-- @return The affected tag.
+-- @function add
+function ws.add(tag, args)
+    return handle_args(tag, args)
+end
 
-    if args.callback then
-        args.callback(tag)
-    end
-
-    return tag
+--- Add to or replace the selected tag's clients.
+--
+-- @param args Table containing tag properties and additional workspace options
+-- @param args.pwd Pathname to the working directory for new clients.
+-- @param args.replace Kill tag's existing clients if true.
+-- @param args.clients Table containing client commands to spawn.
+--
+-- Example: `args.clients = { "xterm",
+-- {"qutebrowser", {factory="qutebrowser"}} }`
+--
+-- @return The affected tag.
+-- @function selected_tag
+function ws.selected_tag(args)
+    return ws.add(awful.screen.focused().selected_tag, args)
 end
 
 return ws

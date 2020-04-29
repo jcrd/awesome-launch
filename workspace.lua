@@ -5,11 +5,64 @@
 -- @module awesome-launch.workspace
 
 local awful = require("awful")
+local naughty = require("naughty")
 local gtable = require("gears.table")
 local launch = require("awesome-launch")
 
 local ws = {}
 ws.client = {}
+
+ws.clients = {}
+ws.filename = '.workspace.lua'
+
+function get_filepath(dir)
+    if dir:sub(-1) ~= '/' then
+        dir = dir..'/'
+    end
+    return dir..ws.filename
+end
+
+function load_workspace(dir)
+    local file = get_filepath(dir)
+    local f, err = loadfile(file, nil, {workspace=ws.clients})
+
+    if not f then
+        naughty.notify {
+            preset = naughty.config.presets.critical,
+            title = 'Error loading '..file,
+            text = err,
+        }
+        return
+    end
+
+    local tbl = f()
+    local clients = {}
+
+    for _, c in ipairs(tbl) do
+        local cmd
+        if type(c) == 'table' and type(c[1]) == 'table' then
+            cmd = table.remove(c, 1)
+            for _, arg in ipairs(c) do
+                cmd[1] = cmd[1]..' '..arg
+            end
+        end
+        table.insert(clients, cmd or c)
+    end
+
+    return clients
+end
+
+function add_clients(cs, tag)
+    for _, c in ipairs(cs) do
+        local cmd
+        local cmdargs
+        if type(c) == "table" then
+            cmd = c[1]
+            cmdargs = gtable.clone(c[2], false)
+        end
+        ws.client.add(cmd or c, cmdargs, tag)
+    end
+end
 
 function handle_args(tag, args)
     args = args or {}
@@ -23,15 +76,14 @@ function handle_args(tag, args)
     end
 
     if args.clients then
-        for _, c in ipairs(args.clients) do
-            local cmd = c
-            local cmdargs
-            if type(c) == "table" then
-                cmd = c[1]
-                cmdargs = gtable.clone(c[2], false)
-            end
-            ws.client.add(cmd, cmdargs, tag)
+        add_clients(args.clients, tag)
+    end
+
+    if args.load_workspace then
+        if not args.pwd then
+            tag.pwd = args.load_workspace
         end
+        add_clients(load_workspace(args.load_workspace), tag)
     end
 
     if args.callback then
@@ -77,6 +129,8 @@ end
 -- Example: `args.clients = { "xterm",
 -- {"qutebrowser", {factory="qutebrowser"}} }`
 --
+-- @param args.load_workspace Path to directory containing workspace file to
+-- load. Implies args.pwd.
 -- @param args.callback Function to call with newly created tag.
 -- @return The new tag.
 -- @function new
@@ -104,6 +158,8 @@ end
 -- Example: `args.clients = { "xterm",
 -- {"qutebrowser", {factory="qutebrowser"}} }`
 --
+-- @param args.load_workspace Path to directory containing workspace file to
+-- load. Implies args.pwd.
 -- @return The affected tag.
 -- @function add
 function ws.add(tag, args)
@@ -120,6 +176,8 @@ end
 -- Example: `args.clients = { "xterm",
 -- {"qutebrowser", {factory="qutebrowser"}} }`
 --
+-- @param args.load_workspace Path to directory containing workspace file to
+-- load. Implies args.pwd.
 -- @return The affected tag.
 -- @function selected_tag
 function ws.selected_tag(args)

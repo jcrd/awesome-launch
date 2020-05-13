@@ -32,7 +32,7 @@ function load_workspace(dir)
             title = 'Error loading '..file,
             text = err,
         }
-        return
+        return {}
     end
 
     local tbl = f()

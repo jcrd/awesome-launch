@@ -144,6 +144,12 @@ function ws.new(name, args)
     end
     local tag = awful.tag.add(name, props)
 
+    tag:connect_signal("property::selected", function ()
+        if tag.volatile and not tag.selected and #tag:clients() == 0 then
+            tag:delete()
+        end
+    end)
+
     return handle_args(tag, args)
 end
 

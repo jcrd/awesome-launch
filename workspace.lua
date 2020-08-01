@@ -7,6 +7,7 @@
 local awful = require("awful")
 local naughty = require("naughty")
 local gtable = require("gears.table")
+local gtimer = require("gears.timer")
 local launch = require("awesome-launch")
 
 local ws = {}
@@ -145,9 +146,11 @@ function ws.new(name, args)
     local tag = awful.tag.add(name, props)
 
     tag:connect_signal("property::selected", function ()
-        if tag.volatile and not tag.selected and #tag:clients() == 0 then
-            tag:delete()
-        end
+        gtimer.delayed_call(function ()
+            if tag.volatile and not tag.selected and #tag:clients() == 0 then
+                tag:delete()
+            end
+        end)
     end)
 
     return handle_args(tag, args)

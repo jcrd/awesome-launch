@@ -42,6 +42,7 @@ function load_workspace(dir)
     for _, c in ipairs(tbl) do
         local cmd
         if type(c) == 'table' and type(c[1]) == 'table' then
+            c = gtable.clone(c)
             cmd = table.remove(c, 1)
             for _, arg in ipairs(c) do
                 cmd[1] = cmd[1]..' '..arg

@@ -103,7 +103,7 @@ end
 -- @param args.props Properties to apply to the client.
 -- @param args.pwd Pathname to the working directory for new clients.
 -- @param args.timeout Seconds after which to stop waiting for a client to spawn.
--- @param args.spawn_callback Function to call with client when it spawns.
+-- @param args.callback Function to call with client when it spawns.
 -- @param args.factory The factory to use (see wm-launch's -f flag).
 -- @param args.firejail If true, run cmd with firejail.
 -- @param tag The tag.

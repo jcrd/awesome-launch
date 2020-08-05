@@ -13,8 +13,8 @@ local panel = {}
 -- TODO: Reapply args on restart with rule source.
 -- See: https://github.com/awesomeWM/awesome/issues/2725
 local function spawn(cmd, args)
-    local cb = args.spawn_callback
-    args.spawn_callback = function (c)
+    local cb = args.callback
+    args.callback = function (c)
         c.hidden = true
         c.sticky = true
         c.floating = true
@@ -47,7 +47,7 @@ end
 -- @param args.props Properties to apply to the client.
 -- @param args.pwd Pathname to the working directory for new clients.
 -- @param args.timeout Seconds after which to stop waiting for a client to spawn.
--- @param args.spawn_callback Function to call with client when it spawns.
+-- @param args.callback Function to call with client when it spawns.
 -- @param args.factory The factory to use (see wm-launch's -f flag).
 -- @param args.firejail If true, run cmd with firejail.
 -- @param args.filter Function to filter clients that are considered.
@@ -58,7 +58,7 @@ function panel.toggle(cmd, args)
     if c then
         toggle(c)
     else
-        local a = {spawn_callback = function (c) toggle(c) end}
+        local a = {callback = function (c) toggle(c) end}
         gtable.crush(a, args)
         spawn(cmd, a)
     end

@@ -31,8 +31,8 @@ awful.rules.add_rule_source("launch",
 
         gears.table.crush(props, data.props)
 
-        if data.spawn_callback then
-            table.insert(callbacks, data.spawn_callback)
+        if data.callback then
+            table.insert(callbacks, data.callback)
         end
 
         shared.pending[id] = nil
@@ -87,7 +87,7 @@ end
 -- @param args.props Properties to apply to the client.
 -- @param args.pwd Pathname to the working directory for new clients.
 -- @param args.timeout Seconds after which to stop waiting for a client to spawn.
--- @param args.spawn_callback Function to call with client when it spawns.
+-- @param args.callback Function to call with client when it spawns.
 -- @param args.factory The factory to use (see wm-launch's -f flag).
 -- @param args.firejail If true, run cmd with firejail.
 -- @return The client's ID.
@@ -98,7 +98,7 @@ local function spawn(cmd, args)
     local data = {
         props = args.props or {},
         pwd = args.pwd,
-        spawn_callback = args.spawn_callback,
+        callback = args.callback,
         timeout = math.ceil(args.timeout or 10),
     }
 
@@ -164,7 +164,7 @@ setmetatable(launch.spawn, {__call = function (_, ...) spawn(...) end})
 -- @param args.props Properties to apply to the client.
 -- @param args.pwd Pathname to the working directory for new clients.
 -- @param args.timeout Seconds after which to stop waiting for a client to spawn.
--- @param args.spawn_callback Function to call with client when it spawns.
+-- @param args.callback Function to call with client when it spawns.
 -- @param args.factory The factory to use (see wm-launch's -f flag).
 -- @param args.firejail If true, run cmd with firejail.
 -- @param args.filter Function to filter clients that are considered.
@@ -189,8 +189,8 @@ end
 -- @param args.props Properties to apply to the client.
 -- @param args.pwd Pathname to the working directory for new clients.
 -- @param args.timeout Seconds after which to stop waiting for a client to spawn.
--- @param args.spawn_callback Function to call with client when it spawns.
--- @param args.callback Function to call with client when it spawns or is raised.
+-- @param args.callback Function to call with client when it spawns.
+-- @param args.raise_callback Function to call with client when it spawns or is raised.
 -- @param args.factory The factory to use (see wm-launch's -f flag).
 -- @param args.firejail If true, run cmd with firejail.
 -- @param args.filter Function to filter clients that are considered.
@@ -206,16 +206,16 @@ function launch.spawn.raise_or_spawn(cmd, args)
     if c then
         c:emit_signal("request::activate", "launch.spawn.raise_or_spawn",
             {raise=true})
-        if args.callback then
-            args.callback(c)
+        if args.raise_callback then
+            args.raise_callback(c)
         end
         return args.id
     end
-    if args.callback then
-        local cb = args.spawn_callback
-        args.spawn_callback = function (c)
+    if args.raise_callback then
+        local cb = args.callback
+        args.callback = function (c)
             if cb then cb(c) end
-            args.callback(c)
+            args.raise_callback(c)
         end
     end
     return spawn(cmd, args)

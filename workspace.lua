@@ -1,7 +1,7 @@
 --- Create new workspaces and launch accompanying clients.
 --
 -- @author James Reed &lt;jcrd@tuta.io&gt;
--- @copyright 2019 James Reed
+-- @copyright 2019-2020 James Reed
 -- @module awesome-launch.workspace
 
 local awful = require("awful")
@@ -105,6 +105,7 @@ end
 -- @param args.timeout Seconds after which to stop waiting for a client to spawn.
 -- @param args.callback Function to call with client when it spawns.
 -- @param args.factory The factory to use (see wm-launch's -f flag).
+-- @param args.systemd If true, run cmd with systemd-run.
 -- @param args.firejail If true, run cmd with firejail.
 -- @param tag The tag.
 -- @function client.add

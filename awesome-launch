@@ -7,10 +7,11 @@ usage() {
 
 options:
   -h          Show help message
+  -s          Launch with systemd-run
   -j          Launch with firejail
   -f FACTORY  Launch via a window factory
   -i ID       The single instance ID to use
-  -s          Spawn if not already running
+  -1          Spawn if not already running
   -r          Raise or spawn'
 }
 
@@ -19,14 +20,15 @@ usage_error() {
     exit 2
 }
 
-while getopts ':hjf:i:sr' opt; do
+while getopts ':hsjf:i:1r' opt; do
     case "$opt" in
         h) usage; exit ;;
+        s) systemd=true ;;
         j) firejail=true ;;
         f) factory="$OPTARG" ;;
         i) id="$OPTARG" ;;
-        s) func='s' ;;
-        r) func='r' ;;
+        1) func='spawn.single_instance' ;;
+        r) func='spawn.raise_or_spawn' ;;
         *) usage_error
     esac
 done
@@ -35,17 +37,12 @@ shift $((OPTIND - 1))
 
 [ $# -eq 0 ] && usage_error
 
-case "${func-}" in
-    s) name='spawn.single_instance' ;;
-    r) name='spawn.raise_or_spawn' ;;
-    *) name='spawn'
-esac
-
 awesome-client "
 args = {
     ${id+id = '$id',}
+    ${systemd+systemd = '$systemd',}
     ${firejail+firejail = '$firejail',}
     ${factory+factory = '$factory',}
 }
-require('awesome-launch').$name('$*', args)
+require('awesome-launch').${func-spawn}('$*', args)
 "

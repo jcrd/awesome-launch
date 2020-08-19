@@ -95,6 +95,7 @@ end
 -- @param args.timeout Seconds after which to stop waiting for a client to spawn.
 -- @param args.callback Function to call with client when it spawns.
 -- @param args.factory The factory to use (see wm-launch's -f flag).
+-- @param args.systemd If true, run cmd with systemd-run.
 -- @param args.firejail If true, run cmd with firejail.
 -- @return The client's ID.
 -- @function launch.spawn
@@ -140,6 +141,10 @@ local function spawn(cmd, args)
         launch_cmd = launch_cmd .. " -f " .. args.factory
     end
 
+    if args.systemd then
+        launch_cmd = launch_cmd .. " -s"
+    end
+
     if args.firejail then
         launch_cmd = launch_cmd .. " -j"
     end
@@ -173,6 +178,7 @@ setmetatable(launch.spawn, {__call = function (_, ...) spawn(...) end})
 -- @param args.timeout Seconds after which to stop waiting for a client to spawn.
 -- @param args.callback Function to call with client when it spawns.
 -- @param args.factory The factory to use (see wm-launch's -f flag).
+-- @param args.systemd If true, run cmd with systemd-run.
 -- @param args.firejail If true, run cmd with firejail.
 -- @param args.filter Function to filter clients that are considered.
 -- @return The client's ID.
@@ -199,6 +205,7 @@ end
 -- @param args.callback Function to call with client when it spawns.
 -- @param args.raise_callback Function to call with client when it spawns or is raised.
 -- @param args.factory The factory to use (see wm-launch's -f flag).
+-- @param args.systemd If true, run cmd with systemd-run.
 -- @param args.firejail If true, run cmd with firejail.
 -- @param args.filter Function to filter clients that are considered.
 -- @return The client's ID.

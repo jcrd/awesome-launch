@@ -93,10 +93,11 @@ usage: awesome-launch [options] COMMAND...
 
 options:
   -h          Show help message
+  -s          Launch with systemd-run
   -j          Launch with firejail
   -f FACTORY  Launch via a window factory
   -i ID       The single instance ID to use
-  -s          Spawn if not already running
+  -1          Spawn if not already running
   -r          Raise or spawn
 ```
 

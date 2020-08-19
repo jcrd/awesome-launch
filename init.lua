@@ -35,6 +35,12 @@ awful.rules.add_rule_source("launch",
             table.insert(callbacks, data.callback)
         end
 
+        if data.factory then
+            c:connect_signal("request::unmanage", function ()
+                awful.spawn("wm-launchd -check " .. data.factory)
+            end)
+        end
+
         shared.pending[id] = nil
         launch.widget.update_widgets()
     end)
@@ -130,6 +136,7 @@ local function spawn(cmd, args)
     local launch_cmd = "wm-launch"
 
     if args.factory then
+        data.factory = args.factory
         launch_cmd = launch_cmd .. " -f " .. args.factory
     end
 

@@ -1,7 +1,9 @@
+-- This project is licensed under the MIT License (see LICENSE).
+
 --- Launch clients with single instance IDs using wm-launch.
 --
 -- @author James Reed &lt;jcrd@tuta.io&gt;
--- @copyright 2019 James Reed
+-- @copyright 2019-2020 James Reed
 -- @module awesome-launch
 
 local awful = require("awful")

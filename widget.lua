@@ -1,3 +1,5 @@
+-- This project is licensed under the MIT License (see LICENSE).
+
 --- Widget to show pending clients.
 --
 -- @author James Reed &lt;jcrd@tuta.io&gt;

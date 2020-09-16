@@ -7,7 +7,7 @@ source = {
 description = {
     summary = "AwesomeWM library for launching clients with single instance IDs",
     homepage = "https://github.com/jcrd/awesome-launch",
-    license = "GPL-3.0",
+    license = "MIT",
 }
 dependencies = {
     "lua >= 5.1",

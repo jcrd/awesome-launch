@@ -113,5 +113,4 @@ If installed via `luarocks`, ensure `awesome-launch`'s [location][1] is in your
 
 ## License
 
-awesome-launch is licensed under the GNU General Public License v3.0 or later
-(see [LICENSE](LICENSE)).
+This project is licensed under the MIT License (see [LICENSE](LICENSE)).

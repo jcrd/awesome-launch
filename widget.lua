@@ -10,6 +10,7 @@ local awful = require("awful")
 local gears = require("gears")
 local wibox = require("wibox")
 local beautiful = require("beautiful")
+local dpi = require("beautiful.xresources").apply_dpi
 
 local shared = require("awesome-launch.shared")
 
@@ -19,8 +20,8 @@ local widget = {}
 
 widget.color = beautiful.bg_focus
 widget.border_color = beautiful.fg_normal
-widget.width = beautiful.wibar_height or 20
-widget.margins = 2
+widget.width = beautiful.wibar_height or dpi(20)
+widget.margins = dpi(2)
 
 local function props_visible(s, p)
     if p.screen and p.screen ~= s then

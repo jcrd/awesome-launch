@@ -10,65 +10,32 @@ local awful = require("awful")
 local naughty = require("naughty")
 local gtable = require("gears.table")
 local gtimer = require("gears.timer")
+local protected_call = require("gears.protected_call")
 local launch = require("awesome-launch")
+
+local lgi = require("lgi")
+local Gio, GLib, GObject = lgi.Gio, lgi.GLib, lgi.GObject
 
 local ws = {}
 ws.client = {}
 
 ws.clients = {}
-ws.filename = '.workspace.lua'
 
-function get_filepath(dir)
-    if dir:sub(-1) ~= '/' then
-        dir = dir..'/'
-    end
-    return dir..ws.filename
-end
-
-function load_workspace(dir)
-    local file = get_filepath(dir)
-    local f, err = loadfile(file, nil, {workspace=ws.clients})
-
-    if not f then
-        naughty.notify {
-            preset = naughty.config.presets.critical,
-            title = 'Error loading '..file,
-            text = err,
-        }
-        return {}
-    end
-
-    local tbl = f()
-    local clients = {}
-
-    for _, c in ipairs(tbl) do
-        local cmd
-        if type(c) == 'table' and type(c[1]) == 'table' then
-            c = gtable.clone(c)
-            cmd = table.remove(c, 1)
-            for _, arg in ipairs(c) do
-                cmd[1] = cmd[1]..' '..arg
-            end
-        end
-        table.insert(clients, cmd or c)
-    end
-
-    return clients
-end
-
-function add_clients(cs, tag)
+local function add_clients(cs, tag)
     for _, c in ipairs(cs) do
         local cmd
         local cmdargs
         if type(c) == "table" then
             cmd = c[1]
-            cmdargs = gtable.clone(c[2], false)
+            if c[2] then
+                cmdargs = gtable.clone(c[2], false)
+            end
         end
         ws.client.add(cmd or c, cmdargs, tag)
     end
 end
 
-function handle_args(tag, args)
+local function handle_args(tag, args)
     args = args or {}
 
     if args.pwd then
@@ -81,13 +48,6 @@ function handle_args(tag, args)
 
     if args.clients then
         add_clients(args.clients, tag)
-    end
-
-    if args.load_workspace then
-        if not args.pwd then
-            tag.pwd = args.load_workspace
-        end
-        add_clients(load_workspace(args.load_workspace), tag)
     end
 
     if args.callback then
@@ -197,5 +157,97 @@ end
 function ws.selected_tag(args)
     return ws.add(awful.screen.focused().selected_tag, args)
 end
+
+local methods = {}
+
+local function parse_client(s)
+    local c = {}
+    local i = 1
+    for t in string.gmatch(s, '[^%s]+') do
+        if i == 1 then
+            if t:sub(1, 1) == '@' then
+                local n = t:sub(2)
+                c = ws.clients[n]
+                if not c then
+                    naughty.notify {
+                        preset = naughty.config.presets.critical,
+                        title = 'Client not defined',
+                        text = n,
+                    }
+                    return
+                end
+            else
+                c[1] = t
+            end
+        else
+            c[1] = string.format('%s %s', c[1], t)
+        end
+        i = i + 1
+    end
+    return c
+end
+
+function methods.Workspace(params, i)
+    local args = {
+        clients = {},
+        callback = function (t)
+            t:view_only()
+        end,
+    }
+
+    if params.value[2] ~= '' then
+        args.pwd = params.value[2]
+    end
+
+    for _, s in params:get_child_value(3 - 1):ipairs() do
+        local c = parse_client(s)
+        if c then
+            table.insert(args.clients, c)
+        end
+    end
+
+    ws.new(params.value[1], args)
+
+    i:return_value(GLib.Variant('()'))
+end
+
+local function method_call(_, _, _, _, method, params, invocation)
+    if methods[method] then
+        protected_call(methods[method], params, invocation)
+    end
+end
+
+local function on_bus_acquired(conn, _)
+    local function arg(name, sig)
+        return Gio.DBusArgInfo {
+            name = name,
+            signature = sig,
+        }
+    end
+    local method = Gio.DBusMethodInfo
+
+    local iface = Gio.DBusInterfaceInfo {
+        name = 'com.github.jcrd.wm_launch.WindowManager',
+        methods = {
+            method {
+                name = 'Workspace',
+                in_args = {
+                    arg('name', 's'),
+                    arg('pwd', 's'),
+                    arg('clients', 'as'),
+                },
+            },
+        },
+    }
+
+    conn:register_object('/com/github/jcrd/wm_launch/WindowManager',
+        iface,
+        GObject.Closure(method_call))
+end
+
+Gio.bus_own_name(Gio.BusType.SESSION,
+    'com.github.jcrd.wm_launch',
+    Gio.BusNameOwnerFlags.NONE,
+    GObject.Closure(on_bus_acquired))
 
 return ws

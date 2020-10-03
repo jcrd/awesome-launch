@@ -143,6 +143,7 @@ function ws.new(name, args)
     local props = {
         screen = awful.screen.focused(),
         volatile = true,
+        layout = awful.layout.layouts[1],
     }
     if args and args.props then
         gtable.crush(props, args.props)

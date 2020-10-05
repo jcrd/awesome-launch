@@ -102,7 +102,6 @@ end
 function ws.new(name, args)
     local props = {
         screen = awful.screen.focused(),
-        volatile = true,
         layout = awful.layout.layouts[1],
     }
     if args and args.props then
@@ -110,13 +109,16 @@ function ws.new(name, args)
     end
     local tag = awful.tag.add(name, props)
 
-    tag:connect_signal("property::selected", function ()
+    local function delete()
         gtimer.delayed_call(function ()
-            if tag.volatile and not tag.selected and #tag:clients() == 0 then
+            if not tag.selected and #tag:clients() == 0 then
                 tag:delete()
             end
         end)
-    end)
+    end
+
+    tag:connect_signal("property::selected", delete)
+    tag:connect_signal("untagged", delete)
 
     return handle_args(tag, args)
 end

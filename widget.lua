@@ -66,15 +66,6 @@ function widget.update_widgets()
 end
 
 function widget.new(cmd, data)
-    local defaults = {
-        color = beautiful.bg_focus,
-        border_color = beautiful.fg_normal,
-        width = 20,
-        margins = 2,
-    }
-
-    gears.table.crush(defaults, widget)
-
     return wibox.widget {
         {
             {
@@ -83,16 +74,16 @@ function widget.new(cmd, data)
                     min_value = 0,
                     max_value = data.timeout,
                     value = data.timeout,
-                    color = defaults.color,
-                    border_color = defaults.border_color,
+                    color = widget.color,
+                    border_color = widget.border_color,
                     widget = wibox.container.radialprogressbar,
                 },
                 id = "id_margin",
-                margins = defaults.margins,
+                margins = widget.margins,
                 layout = wibox.container.margin,
             },
             id = "id_const",
-            width = defaults.width,
+            width = widget.width,
             layout = wibox.container.constraint,
         },
         {

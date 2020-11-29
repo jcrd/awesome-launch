@@ -3,7 +3,7 @@
 --- Widget to show pending clients.
 --
 -- @author James Reed &lt;jcrd@tuta.io&gt;
--- @copyright 2019 James Reed
+-- @copyright 2019-2020 James Reed
 -- @module awesome-launch.widget
 
 local awful = require("awful")
@@ -17,11 +17,6 @@ local shared = require("awesome-launch.shared")
 local widgets = {}
 
 local widget = {}
-
-widget.color = beautiful.bg_focus
-widget.border_color = beautiful.fg_normal
-widget.width = beautiful.wibar_height or dpi(20)
-widget.margins = dpi(2)
 
 local function props_visible(s, p)
     if p.screen and p.screen ~= s then
@@ -74,16 +69,16 @@ function widget.new(cmd, data)
                     min_value = 0,
                     max_value = data.timeout,
                     value = data.timeout,
-                    color = widget.color,
-                    border_color = widget.border_color,
+                    color = widget.color or beautiful.bg_focus,
+                    border_color = widget.border_color or beautiful.fg_normal,
                     widget = wibox.container.radialprogressbar,
                 },
                 id = "id_margin",
-                margins = widget.margins,
+                margins = widget.margins or dpi(2),
                 layout = wibox.container.margin,
             },
             id = "id_const",
-            width = widget.width,
+            width = widget.width or beautiful.wibar_height or dpi(20),
             layout = wibox.container.constraint,
         },
         {

@@ -69,7 +69,7 @@ function widget.new(cmd, data)
                     min_value = 0,
                     max_value = data.timeout,
                     value = data.timeout,
-                    color = widget.color or beautiful.bg_focus,
+                    color = widget.color or beautiful.bg_normal,
                     border_color = widget.border_color or beautiful.fg_normal,
                     widget = wibox.container.radialprogressbar,
                 },

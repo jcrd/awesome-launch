@@ -42,6 +42,7 @@ local function spawn(cmd, args)
     args.callback = function (c)
         c.floating = true
         c.skip_taskbar = true
+        c.launch_panel = true
         awful.placement.scale(c, {to_percent=args.scale or 0.5})
         awful.placement.centered(c)
         if panel.setup_func then

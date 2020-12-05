@@ -12,28 +12,55 @@ local launch = require("awesome-launch")
 
 local panel = {}
 
+--- Function to handle toggling of a panel client.
+--
+-- By default, the client's hidden state is toggled.
+--
+-- @param c The client being toggled.
+-- @param state The toggle state: `true` if being toggled into view, `false`
+-- otherwise.
+-- @function panel.toggle_func
+function panel.toggle_func(c, state)
+    c.hidden = not state
+end
+
+--- Function to handle setup of a panel client.
+--
+-- By default, the client is hidden and made sticky.
+--
+-- @param c The client being setup.
+-- @function panel.setup_func
+function panel.setup_func(c)
+    c.hidden = true
+    c.sticky = true
+end
+
 -- TODO: Reapply args on restart with rule source.
 -- See: https://github.com/awesomeWM/awesome/issues/2725
 local function spawn(cmd, args)
     local cb = args.callback
     args.callback = function (c)
-        c.hidden = true
-        c.sticky = true
         c.floating = true
         c.skip_taskbar = true
         awful.placement.scale(c, {to_percent=args.scale or 0.5})
         awful.placement.centered(c)
-        c:connect_signal("unfocus", function () c.hidden = true end)
+        if panel.setup_func then
+            panel.setup_func(c)
+        end
+        c:connect_signal("unfocus", function ()
+            panel.toggle_func(c, false)
+        end)
         if cb then cb(c) end
+        panel.toggle_func(c, true)
     end
     launch.spawn.single_instance(cmd, args)
 end
 
 local function toggle(c)
     if c == client.focus then
-        c.hidden = true
+        panel.toggle_func(c, false)
     else
-        c.hidden = false
+        panel.toggle_func(c, true)
         c:emit_signal("request::activate", "panel.toggle", {raise=true})
     end
 end
@@ -61,9 +88,7 @@ function panel.toggle(cmd, args)
     if c then
         toggle(c)
     else
-        local a = {callback = function (c) toggle(c) end}
-        gtable.crush(a, args)
-        spawn(cmd, a)
+        spawn(cmd, args)
     end
 end
 

@@ -8,6 +8,7 @@
 
 local awful = require("awful")
 local gears = require("gears")
+local ruled = require("ruled")
 local wibox = require("wibox")
 local beautiful = require("beautiful")
 local uuid = require("uuid")
@@ -21,12 +22,21 @@ launch.widget = require("awesome-launch.widget")
 
 awesome.register_xproperty("WM_LAUNCH_ID", "string")
 
+local function get_data(c)
+    local id = c:get_xproperty("WM_LAUNCH_ID")
+    if id and id ~= "" then
+        return shared.pending[id]
+    end
+    for _, data in pairs(shared.pending) do
+        if data.rule and ruled.client.match(c, data.rule) then
+            return data
+        end
+    end
+end
+
 awful.rules.add_rule_source("launch",
     function (c, props, callbacks)
-        local id = c:get_xproperty("WM_LAUNCH_ID")
-        if not id or id == "" then return end
-
-        local data = shared.pending[id]
+        local data = get_data(c)
         if not data then return end
 
         data.timer:stop()
@@ -43,7 +53,7 @@ awful.rules.add_rule_source("launch",
             end)
         end
 
-        shared.pending[id] = nil
+        shared.pending[data.id] = nil
         launch.widget.update_widgets()
     end)
 
@@ -99,16 +109,19 @@ end
 -- @param args.factory The factory to use (see wm-launch's -f flag).
 -- @param args.systemd If true, run cmd with systemd-run.
 -- @param args.firejail If true, run cmd with firejail.
+-- @param args.rule Fallback client rule used if setting the ID fails.
 -- @return The client's ID.
 -- @function launch.spawn
 local function spawn(cmd, args)
     args = args or {}
     local id = args.id or uuid()
     local data = {
+        id = id,
         props = args.props or {},
         pwd = args.pwd,
         callback = args.callback,
         timeout = math.ceil(args.timeout or 10),
+        rule = args.rule,
     }
 
     gears.table.crush(data.props, {
@@ -182,6 +195,7 @@ setmetatable(launch.spawn, {__call = function (_, ...) spawn(...) end})
 -- @param args.factory The factory to use (see wm-launch's -f flag).
 -- @param args.systemd If true, run cmd with systemd-run.
 -- @param args.firejail If true, run cmd with firejail.
+-- @param args.rule Fallback client rule used if setting the ID fails.
 -- @param args.filter Function to filter clients that are considered.
 -- @return The client's ID.
 -- @function spawn.single_instance
@@ -209,6 +223,7 @@ end
 -- @param args.factory The factory to use (see wm-launch's -f flag).
 -- @param args.systemd If true, run cmd with systemd-run.
 -- @param args.firejail If true, run cmd with firejail.
+-- @param args.rule Fallback client rule used if setting the ID fails.
 -- @param args.filter Function to filter clients that are considered.
 -- @return The client's ID.
 -- @function spawn.raise_or_spawn

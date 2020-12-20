@@ -8,6 +8,7 @@
 
 local awful = require("awful")
 local gtable = require("gears.table")
+local gtimer = require("gears.timer")
 local launch = require("awesome-launch")
 
 local panel = {}
@@ -49,7 +50,11 @@ local function spawn(cmd, args)
             panel.setup_func(c)
         end
         c:connect_signal("unfocus", function ()
-            panel.toggle_func(c, false)
+            gtimer.delayed_call(function ()
+                if not (client.focus and client.focus.floating) then
+                    panel.toggle_func(c, false)
+                end
+            end)
         end)
         if cb then cb(c) end
         panel.toggle_func(c, true)

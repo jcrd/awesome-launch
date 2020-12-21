@@ -43,7 +43,9 @@ local function handle_args(tag, args)
     end
 
     if args.replace and not tag.volatile then
-        for _, c in ipairs(tag:clients()) do c:kill() end
+        for _, c in ipairs(tag:clients()) do
+            c:kill()
+        end
     end
 
     if args.clients then

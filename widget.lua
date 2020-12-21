@@ -35,7 +35,9 @@ local function props_visible(s, p)
     end
     if p.tags then
         for _, t in ipairs(p.tags) do
-            if selected(t) then return true end
+            if selected(t) then
+                return true
+            end
         end
     end
 end

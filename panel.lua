@@ -56,7 +56,9 @@ local function spawn(cmd, args)
                 end
             end)
         end)
-        if cb then cb(c) end
+        if cb then
+            cb(c)
+        end
         panel.toggle_func(c, true)
     end
     launch.spawn.single_instance(cmd, args)

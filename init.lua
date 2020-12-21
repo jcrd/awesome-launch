@@ -37,7 +37,9 @@ end
 awful.rules.add_rule_source("launch",
     function (c, props, callbacks)
         local data = get_data(c)
-        if not data then return end
+        if not data then
+            return
+        end
 
         data.timer:stop()
 
@@ -64,7 +66,9 @@ launch.client = {}
 local function get_ids()
     local ids = {}
     for _, c in ipairs(client.get()) do
-        if c.single_instance_id then ids[c.single_instance_id] = c end
+        if c.single_instance_id then
+            ids[c.single_instance_id] = c
+        end
     end
     return ids
 end
@@ -125,9 +129,9 @@ local function spawn(cmd, args)
     }
 
     gears.table.crush(data.props, {
-            single_instance_id = id,
-            cmdline = cmd,
-        })
+        single_instance_id = id,
+        cmdline = cmd,
+    })
 
     local step = 1/2
     data.timer = gears.timer {
@@ -206,7 +210,9 @@ function launch.spawn.single_instance(cmd, args)
     else
         c = launch.client.by_cmdline(cmd, args.filter)
     end
-    if not c then return spawn(cmd, args) end
+    if not c then
+        return spawn(cmd, args)
+    end
     return args.id
 end
 
@@ -236,7 +242,7 @@ function launch.spawn.raise_or_spawn(cmd, args)
     end
     if c then
         c:emit_signal("request::activate", "launch.spawn.raise_or_spawn",
-            {raise=true})
+            {raise = true})
         if args.raise_callback then
             args.raise_callback(c)
         end
@@ -245,7 +251,9 @@ function launch.spawn.raise_or_spawn(cmd, args)
     if args.raise_callback then
         local cb = args.callback
         args.callback = function (c)
-            if cb then cb(c) end
+            if cb then
+                cb(c)
+            end
             args.raise_callback(c)
         end
     end
@@ -272,7 +280,9 @@ function launch.spawn.here(tag_func)
         end
 
         local a = {
-            filter = function (c) return c:isvisible() end,
+            filter = function (c)
+                return c:isvisible()
+            end,
             props = {tag = tag},
         }
         gears.table.crush(a, args or {})

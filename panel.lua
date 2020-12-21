@@ -51,7 +51,7 @@ local function spawn(cmd, args)
         end
         c:connect_signal("unfocus", function ()
             gtimer.delayed_call(function ()
-                if not (client.focus and client.focus.floating) then
+                if c and not (client.focus and client.focus.floating) then
                     panel.toggle_func(c, false)
                 end
             end)

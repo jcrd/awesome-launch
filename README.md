@@ -7,7 +7,7 @@ IDs using [wm-launch](https://github.com/jcrd/wm-launch).
 ## Dependencies
 
 * [uuid](https://luarocks.org/modules/tieske/uuid) rock
-* [wm-launch](https://github.com/jcrd/wm-launch) >= 0.3.0
+* [wm-launch](https://github.com/jcrd/wm-launch) >= 0.5.0
 
 ## Installation
 

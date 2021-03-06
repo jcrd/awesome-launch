@@ -43,6 +43,10 @@ awful.rules.add_rule_source("launch",
 
         data.timer:stop()
 
+        if data.props.tag and not data.props.tag.activated then
+            data.props.tag = awful.screen.focused().selected_tag
+        end
+
         gears.table.crush(props, data.props)
 
         if data.callback then

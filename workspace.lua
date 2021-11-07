@@ -11,10 +11,12 @@ local naughty = require("naughty")
 local gtable = require("gears.table")
 local gtimer = require("gears.timer")
 local protected_call = require("gears.protected_call")
-local launch = require("awesome-launch")
 
 local lgi = require("lgi")
 local Gio, GLib, GObject = lgi.Gio, lgi.GLib, lgi.GObject
+
+local launch = require("awesome-launch")
+local shared = require("awesome-launch.shared")
 
 local ws = {}
 ws.client = {}
@@ -113,6 +115,11 @@ function ws.new(name, args)
 
     local function delete()
         gtimer.delayed_call(function ()
+            for _, data in pairs(shared.pending) do
+                if data.props.tag and data.props.tag == tag then
+                    return
+                end
+            end
             if not tag.selected and #tag:clients() == 0 then
                 tag:delete()
             end

@@ -1,8 +1,8 @@
 package = "awesome-launch"
-version = "0.4.2-1"
+version = "0.4.3-1"
 source = {
     url = "git://github.com/jcrd/awesome-launch",
-    tag = "v0.4.2",
+    tag = "v0.4.3",
 }
 description = {
     summary = "AwesomeWM library for launching clients with single instance IDs",
